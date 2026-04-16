@@ -8,7 +8,6 @@ import os
 import tempfile
 import numpy as np
 import torch
-# import clip  # 不再使用原生的 clip 库
 import whisper
 import asyncio
 import edge_tts
@@ -17,12 +16,12 @@ from PIL import Image
 from ultralytics import YOLO
 from openai import OpenAI
 
-# 新增：用于加载微调后的 LoRA 模型
+# 用于加载微调后的 LoRA 模型
 from transformers import CLIPProcessor, CLIPModel
 from peft import PeftModel
 
 # ================= 1. 配置与模型初始化 =================
-QWEN_API_KEY = "sk-7809a04035874225959564cbebb885ab"
+QWEN_API_KEY = "sk-xxxx"
 MODEL_PATH = "yolo26n.pt"
 LORA_ADAPTER_PATH = "/home/syy/workspace/project/clip_finetuned_adapter"
 BASE_CLIP_MODEL = "openai/clip-vit-base-patch32"
@@ -66,7 +65,7 @@ async def tts_speak(text):
     await communicate.save(output_path)
     return output_path
 
-# ================= 3. 视频处理流水线 (保持不变) =================
+# ================= 3. 视频处理流水线 =================
 
 def process_video_advanced(video_path):
     global id_gallery
@@ -114,7 +113,7 @@ def process_video_advanced(video_path):
     video_metadata.update({"max_people": max_on_screen, "processed": True})
     return output_path, f"分析完成！识别出 {len(id_gallery)} 个唯一身份目标。"
 
-# ================= 4. 语义检索 (关键修改) =================
+# ================= 4. 语义检索 =================
 
 def handle_ai_search(audio_path, text_input):
     if not video_metadata["processed"]: return "请先分析视频。", None, None
@@ -180,7 +179,7 @@ def handle_ai_search(audio_path, text_input):
         traceback.print_exc()
         return f"检索失败: {str(e)}", None, None
 
-# ================= 5. UI 界面 (保持不变) =================
+# ================= 5. UI 界面  =================
 
 with gr.Blocks(theme=gr.themes.Soft()) as demo:
     gr.Markdown("# 智能AI语义检索系统 (LoRA微调版)")
