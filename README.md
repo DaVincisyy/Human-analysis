@@ -13,18 +13,18 @@ An intelligent surveillance analysis platform that combines **Computer Vision (C
 ---
 
 ## 📺 Demo UI
-> **Note**: Add a screenshot of your Gradio interface here to make it look professional!
-> `![UI Screenshot](your_image_url_here)`
+> **Note**: Add a screenshot of your Gradio interface here to make it look professional!  
+> `![UI Screenshot](https://your-image-link.com/demo.png)`
 
 ---
 
 ## ✨ Key Features
 
-- [x] **Deep Multi-Object Tracking (MOT)**: Utilizes **YOLO** with **BoT-SORT** for robust, real-time pedestrian detection.
-- [x] **Semantic Search**: Natural language queries like *"A person wearing a red jacket"* to find targets.
-- [x] **LoRA Fine-tuning**: Custom training pipeline to refine **OpenAI CLIP** on 230k+ pedestrian samples.
-- [x] **Voice-Activated**: Integrated **OpenAI Whisper** for ASR and **Edge-TTS** for voice reports.
-- [x] **AI Reasoning**: Powered by **Qwen-Turbo** for intelligent query parsing.
+- [x] **Deep Multi-Object Tracking (MOT)**: Utilizes **YOLO** with **BoT-SORT** for robust, real-time pedestrian detection and trajectory tracking.
+- [x] **Semantic Search**: Natural language queries like *"A person wearing a red jacket"* to retrieve specific targets from video streams.
+- [x] **LoRA Fine-tuning**: Custom training pipeline to refine **OpenAI CLIP** on 230k+ pedestrian samples for domain-specific accuracy.
+- [x] **Voice-Activated**: Integrated **OpenAI Whisper** for Automatic Speech Recognition (ASR) and **Edge-TTS** for voice-based result reporting.
+- [x] **AI Reasoning**: Powered by **Qwen-Turbo** for intelligent parsing of complex user queries.
 
 ---
 
@@ -51,28 +51,50 @@ graph TD
     E --> F[CLIP + LoRA Semantic Matching]
     C --> F
     F --> G[Gradio Results / TTS Report]
-🏋️ LoRA Fine-tuning Details
-The model is optimized using Low-Rank Adaptation (LoRA), significantly enhancing its ability to recognize pedestrian attributes while keeping the model lightweight.
-Parameter	Value
-Rank (r)	16
-Alpha	32
-Trainable Params	~1.28% of total
-Target Modules	q_proj, v_proj, k_proj, out_proj
-🔧 Installation & Setup
-Clone & Install Dependencies:
-code
-Bash
-git clone https://github.com/DaVincisyy/Human-analysis.git
-cd Human-analysis
-pip install torch transformers peft ultralytics gradio whisper openai edge-tts
-Configure API:
-Add your QWEN_API_KEY in humananalysis.py.
-Run Application:
-code
-Bash
-python humananalysis.py
-👤 Author
+```
+---
+
+## 🏋️ LoRA Fine-tuning Details
+
+The model is optimized using Low-Rank Adaptation (LoRA), improving pedestrian attribute recognition while keeping training efficient.
+
+| Parameter | Value |
+| :--- | :--- |
+| **Rank (r)** | 16 |
+| **Alpha** | 32 |
+| **Trainable Params** | ~1.28% |
+| **Target Modules** | q_proj, v_proj, k_proj, out_proj |
+| **Dataset Size** | 230k+ Pedestrian Images |
+
+---
+
+## 🔧 Installation & Setup
+
+1. **Clone Repository**
+   ```bash
+   git clone https://github.com/DaVincisyy/Human-analysis.git
+   cd Human-analysis
+   ```
+2. **Install Dependencies**
+   ```bash
+   pip install torch transformers peft ultralytics gradio openai-whisper openai edge-tts
+   ```
+3. **Configure API**
+  Edit humananalysis.py:
+  ```python
+  import os
+  os.environ["DASHSCOPE_API_KEY"] = "your_api_key_here"
+  ```
+4. **Run Application**
+  ```python
+  python humananalysis.py
+  ```
+
+---
+
+## 👤 Author
+
 DaVincisyy
-🎓 Junior Student in Information Engineering
-🔭 Focusing on Multi-modal Learning & AI System Integration
-📫 Reach out via GitHub Issues!
+Junior Student in Information Engineering
+
+📫 Contact via GitHub Issues
