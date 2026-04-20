@@ -68,9 +68,8 @@ training_args = TrainingArguments(
     weight_decay=0.01,
     logging_steps=10,
     save_steps=500,
-    fp16=True if torch.cuda.is_available() else False, # 混合精度训练
-    remove_unused_columns=False, # 必须为 False
-    push_to_hub=False,
+    fp16=True if torch.cuda.is_available() else False, 
+    remove_unused_columns=False, 
     report_to="none"
 )
 
