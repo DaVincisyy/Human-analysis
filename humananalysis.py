@@ -16,7 +16,11 @@ from PIL import Image
 from ultralytics import YOLO
 from openai import OpenAI
 
+<<<<<<< Updated upstream
 # 用于加载微调后的 LoRA 模型
+=======
+# 加载微调后的 LoRA 模型
+>>>>>>> Stashed changes
 from transformers import CLIPProcessor, CLIPModel
 from peft import PeftModel
 
@@ -114,6 +118,10 @@ def process_video_advanced(video_path):
     return output_path, f"分析完成！识别出 {len(id_gallery)} 个唯一身份目标。"
 
 # ================= 4. 语义检索 =================
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 
 def handle_ai_search(audio_path, text_input):
     if not video_metadata["processed"]: return "请先分析视频。", None, None
@@ -123,6 +131,15 @@ def handle_ai_search(audio_path, text_input):
         query = asr_model.transcribe(audio_path, language='zh')["text"]
     if not query: return "无效指令", None, None
 
+    # ====== 新增：统计类问题意图拦截 ======
+    if "几个" in query or "多少" in query or "总数" in query or "总共" in query:
+        total_people = len(id_gallery)
+        ai_reply = f"根据 YOLO 深度追踪分析，监控视频中总共出现了 {total_people} 个不同的个体。"
+        # 语音播报
+        voice = asyncio.run(tts_speak(ai_reply))
+        return ai_reply, voice, [] # 返回空图片列表，因为不需要看检索结果
+    # ======================================
+    
     match_results = []
     
     try:
@@ -164,9 +181,24 @@ def handle_ai_search(audio_path, text_input):
                     match_results.append(all_crops[idx])
                 if len(match_results) >= 8: break
 
-        # 3. AI 报告
-        ai_msg = f"用户搜索：'{query}'。我们在监控中找到了{len(match_results)}个高匹配度个体。请总结。"
-        resp = client.chat.completions.create(model="qwen-turbo", messages=[{"role": "user", "content": ai_msg}])
+        # 3. AI 报告 (优化版：消除幻觉，统一场景)
+        system_prompt = """
+        你是一个专业的安防监控AI助手。请根据用户的搜索指令和匹配数量生成简短、客观的检索报告。
+        严格遵守以下规则：
+        1. 绝对不要编造或推测目标的具体地点、行为、身份或背景故事。
+        2. 监控画面是固定场景，请统一使用“在当前监控场景中”或“监控画面中”来描述。
+        3. 语气要专业、简练，直接汇报数据结果。
+        """
+        
+        ai_msg = f"用户搜索指令：'{query}'。我们在当前监控场景中检索到了 {len(match_results)} 个高匹配度个体。请生成一句简短的总结报告。"
+        
+        resp = client.chat.completions.create(
+            model="qwen-turbo", 
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": ai_msg}
+            ]
+        )
         ai_reply = resp.choices[0].message.content
         
         # 4. 语音
@@ -182,7 +214,7 @@ def handle_ai_search(audio_path, text_input):
 # ================= 5. UI 界面  =================
 
 with gr.Blocks(theme=gr.themes.Soft()) as demo:
-    gr.Markdown("# 智能AI语义检索系统 (LoRA微调版)")
+    gr.Markdown("# 目标检测")
     
     with gr.Row():
         with gr.Column():
