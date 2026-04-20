@@ -1,9 +1,7 @@
 import os
 os.environ["HF_ENDPOINT"] = "https://hf-mirror.com"
-
-
 import gradio as gr
-import cv2
+import cv2# 用于处理视频流和图像帧 (OpenCV)
 import os
 import tempfile
 import numpy as np
@@ -16,16 +14,12 @@ from PIL import Image
 from ultralytics import YOLO
 from openai import OpenAI
 
-<<<<<<< Updated upstream
-# 用于加载微调后的 LoRA 模型
-=======
 # 加载微调后的 LoRA 模型
->>>>>>> Stashed changes
 from transformers import CLIPProcessor, CLIPModel
 from peft import PeftModel
 
 # ================= 1. 配置与模型初始化 =================
-QWEN_API_KEY = "sk-xxxx"
+QWEN_API_KEY = "sk-7809a04035874225959564cbebb885ab"
 MODEL_PATH = "yolo26n.pt"
 LORA_ADAPTER_PATH = "/home/syy/workspace/project/clip_finetuned_adapter"
 BASE_CLIP_MODEL = "openai/clip-vit-base-patch32"
@@ -69,7 +63,7 @@ async def tts_speak(text):
     await communicate.save(output_path)
     return output_path
 
-# ================= 3. 视频处理流水线 =================
+# ================= 3. 视频处理流水线 (保持不变) =================
 
 def process_video_advanced(video_path):
     global id_gallery
@@ -118,10 +112,7 @@ def process_video_advanced(video_path):
     return output_path, f"分析完成！识别出 {len(id_gallery)} 个唯一身份目标。"
 
 # ================= 4. 语义检索 =================
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 
 def handle_ai_search(audio_path, text_input):
     if not video_metadata["processed"]: return "请先分析视频。", None, None
@@ -211,7 +202,7 @@ def handle_ai_search(audio_path, text_input):
         traceback.print_exc()
         return f"检索失败: {str(e)}", None, None
 
-# ================= 5. UI 界面  =================
+# ================= 5. UI 界面 (保持不变) =================
 
 with gr.Blocks(theme=gr.themes.Soft()) as demo:
     gr.Markdown("# 目标检测")
