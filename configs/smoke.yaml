@@ -1,0 +1,28 @@
+seed: 42
+model_path: models/clip-vit-base-patch32
+dataset_path: data/rstpreid
+output_dir: outputs/smoke
+
+train:
+  epochs: 1
+  batch_size: 16
+  eval_batch_size: 32
+  gradient_accumulation_steps: 1
+  learning_rate: 0.0001
+  weight_decay: 0.01
+  warmup_ratio: 0.0
+  num_workers: 0
+  mixed_precision: bf16
+  max_train_pairs: 64
+  max_eval_images: 64
+  log_every: 2
+
+lora:
+  rank: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - out_proj

@@ -19,10 +19,14 @@ from transformers import CLIPProcessor, CLIPModel
 from peft import PeftModel
 
 # ================= 1. 配置与模型初始化 =================
-QWEN_API_KEY = "sk-7809a04035874225959564cbebb885ab"
-MODEL_PATH = "yolo26n.pt"
-LORA_ADAPTER_PATH = "/home/syy/workspace/project/clip_finetuned_adapter"
-BASE_CLIP_MODEL = "openai/clip-vit-base-patch32"
+QWEN_API_KEY = os.getenv("DASHSCOPE_API_KEY", "")
+MODEL_PATH = os.getenv("YOLO_MODEL_PATH", "yolo11n.pt")
+LORA_ADAPTER_PATH = os.getenv(
+    "LORA_ADAPTER_PATH", "outputs/main_r16_a32_all/best_adapter"
+)
+BASE_CLIP_MODEL = os.getenv(
+    "BASE_CLIP_MODEL", "models/clip-vit-base-patch32"
+)
 
 print("正在启动微调版多人ReID语义检索系统...")
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -30,7 +34,14 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 # 1.1 加载 YOLO 和 Whisper
 yolo_model = YOLO(MODEL_PATH)
 asr_model = whisper.load_model("tiny")
-client = OpenAI(api_key=QWEN_API_KEY, base_url="https://dashscope.aliyuncs.com/compatible-mode/v1")
+client = (
+    OpenAI(
+        api_key=QWEN_API_KEY,
+        base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
+    )
+    if QWEN_API_KEY
+    else None
+)
 
 # 1.2 加载微调后的 CLIP 模型 (关键修改)
 print(f"正在加载 LoRA 微调权重: {LORA_ADAPTER_PATH}...")
@@ -134,6 +145,10 @@ def handle_ai_search(audio_path, text_input):
     match_results = []
     
     try:
+        if client is None:
+            raise RuntimeError(
+                "缺少 DASHSCOPE_API_KEY，请在环境变量中配置新的 API Key。"
+            )
         # 1. 语义特征提取 (LLM) - 让标签更符合 ReID
         res = client.chat.completions.create(
             model="qwen-turbo",
