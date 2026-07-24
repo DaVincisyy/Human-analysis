@@ -141,6 +141,3 @@ LoRA 主实验：
 `humananalysis.py` 保留了 YOLO 行人跟踪、Whisper、Qwen 查询解析、TTS 和
 Gradio 展示逻辑。API Key、YOLO 权重、CLIP 基座与 Adapter 路径均通过环境
 变量配置，参考 `.env.example`。
-
-仓库历史版本曾包含明文 API Key。该 Key 必须在服务端撤销并重新生成；不要
-把新 Key 写回代码或提交到 Git。
